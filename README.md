@@ -54,7 +54,13 @@ Strap on, pick a mode, and the player runs the session:
 - **Regular:** plays whole videos start to finish and handles edges in place.
 - **PMV:** whole tracks, never cut mid-song. An edge turns the script off for the rest of the track as a cool-down.
 - **Script only:** no video, just the Handy. It's built for a side monitor, with a Faster / Slower pace.
-- **Adventure:** choose-your-own-adventure. Every few minutes you pick the next step from cards built from performers, tags and chapter markers.
+- **Adventure:** choose-your-own-adventure. Every few minutes you pick the next step from cards built from performers, tags and chapter markers ([see below](#adventure-mode)).
+
+### The start screen
+
+Connect your strap (or use manual arousal), set your goals, choose how it catches edges, and pick a mode.
+
+![The start screen, with every button explained](docs/start-screen.png)
 
 **How it reads you**
 - Heart rate **caps** intensity rather than setting it. A drifting "mood" picks underneath, so a low pulse never means "maximum speed".
@@ -69,6 +75,18 @@ Strap on, pick a mode, and the player runs the session:
 - If the page crashes, the Handy is stopped the next time you open it. The player also pauses if the browser freezes or the tab stays hidden.
 - Live volume leveling, seek-bar previews, fullscreen and half speed.
 - Every session is recorded second by second to your own disk, so you can see what actually happened.
+
+### The video player
+
+The controls sit under the video, never on it. The status line shows the section's intensity, early warnings, your pulse against the pullback mark, and what it just did. Every button has a key.
+
+![The video player, with the status line and every button explained](docs/video-player.png)
+
+### Adventure mode
+
+Every few minutes (and when a scene ends) you get four doors: stay with the performer you're watching, the next step of the story, someone new, or a mystery. The video keeps playing while you choose. After 15 seconds your pulse picks for you.
+
+![Adventure mode's card screen, explained](docs/adventure.png)
 
 ## Library hub
 
