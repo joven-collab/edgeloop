@@ -601,7 +601,7 @@ describe('the learning profile is clamped like every other restored value', () =
 });
 
 describe('the documented backup is the backup that is written', () => {
-    const readme = readFileSync(new URL('../../README.md', import.meta.url), 'utf8');
+    const readme = readFileSync(new URL('../../ORIGINAL-README.md', import.meta.url), 'utf8');
     const section = readme.slice(readme.indexOf('### Backup & Restore'));
 
     it('names every store the file actually carries', () => {

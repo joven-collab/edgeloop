@@ -8,7 +8,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const DOCS = ['README.md', 'CHANGELOG.md'];
+const DOCS = ['README.md', 'ORIGINAL-README.md', 'CHANGELOG.md'];
 
 // "about 290 tests", "290 tests", "290 unit tests", "~330 tests", "330 passing
 // tests". The word may be plural or not and the number may carry a separator.

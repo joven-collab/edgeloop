@@ -1152,7 +1152,7 @@ describe('Survival Mode and Ruin & Leak are the documented exceptions to the cei
     it('the Guards text, both mode cards and the README name BOTH exceptions', () => {
         const read = (name) => readFileSync(new URL(`../../${name}`, import.meta.url), 'utf8');
         const guards = read('index.html');
-        const readme = read('README.md');
+        const readme = read('ORIGINAL-README.md');
         const claims = [
             ['index.html Guards text', guards.match(/Crawl<\/strong> keeps a 10% micro-motion[\s\S]*?<\/p>/)],
             ['README Guards bullet', readme.match(/\*Crawl\* keeps a 10% micro-motion[^\n]*/)]
