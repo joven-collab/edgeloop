@@ -1,0 +1,49 @@
+/* First-run setup (setup.html), on top of hub.css. */
+.setup { max-width: 760px; margin: 0 auto; padding: 28px 16px 48px; }
+
+.rail { display: flex; gap: 6px; list-style: none; padding: 0; margin: 0 0 22px; flex-wrap: wrap; }
+.rail li { display: flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-size: 12px; cursor: pointer; }
+.rail li b { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(255, 255, 255, 0.07); font-size: 11px; }
+.rail li.on { color: var(--text); border-color: var(--accent); background: var(--accent-soft); }
+.rail li.ok b { background: rgba(34, 197, 94, 0.25); color: var(--good); }
+.rail li.warn b { background: rgba(248, 113, 113, 0.2); color: var(--bad); }
+
+.step { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; min-height: 280px; }
+.step h2 { margin: 0 0 6px; font-size: 20px; }
+.step h3 { margin: 18px 0 6px; font-size: 14px; }
+.step p { margin: 8px 0; }
+.step ul, .step ol { margin: 8px 0; padding-left: 20px; }
+.step li { margin: 4px 0; }
+.step a.link { color: #c4b5fd; text-decoration: underline; }
+.step code { background: rgba(255, 255, 255, 0.07); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+
+.field { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+.field label { font-size: 12px; color: var(--muted); }
+.field input, .field select { padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--text); font: inherit; }
+.field input:focus { outline: none; border-color: var(--accent); }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0; }
+
+.result { margin: 12px 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); }
+.result:empty { display: none; }
+.result.good { border-color: rgba(34, 197, 94, 0.4); }
+.result.bad { border-color: rgba(248, 113, 113, 0.4); }
+.result.good::before { content: "✓ "; color: var(--good); font-weight: 700; }
+.result.bad::before { content: "! "; color: var(--bad); font-weight: 700; }
+
+.note { margin: 14px 0; padding: 12px 14px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 12px 0; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.stat b { display: block; font-size: 22px; }
+.checklist { list-style: none; padding: 0 !important; }
+.checklist li { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.checklist li span:first-child { width: 18px; text-align: center; }
+.checklist .y { color: var(--good); }
+.checklist .n { color: var(--muted); }
+.checklist .x { color: var(--bad); }
+
+.step-nav { display: flex; gap: 10px; margin-top: 14px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.primary:hover { background: #7c4ef0; }
+.btn:disabled { opacity: 0.45; cursor: default; }
+
+@media (max-width: 560px) { .step { padding: 18px 16px; } .rail li span { display: none; } .rail li { padding-right: 4px; } }

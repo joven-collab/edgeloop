@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Performer Check</title>
+<link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="src/css/topbar.css">
+<style>
+:root {
+  --bg: #0b0b0e; --panel: #16161b; --text: #e8e8ec; --muted: #9a9aa6;
+  --accent: #8b5cf6; --line: rgba(255, 255, 255, 0.12); --good: #22c55e; --mid: #eab308; --low: #f97316;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.4 system-ui, sans-serif; }
+body { padding-top: 48px; }
+header.review-head {
+  position: sticky; top: 48px; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+  padding: 12px 16px; background: rgba(11, 11, 14, 0.94); border-bottom: 1px solid var(--line); backdrop-filter: blur(6px);
+}
+header h1 { margin: 0; font-size: 18px; }
+header .grow { flex: 1; }
+.muted { color: var(--muted); }
+button {
+  background: rgba(255, 255, 255, 0.08); color: var(--text); border: 1px solid var(--line);
+  border-radius: 8px; padding: 8px 14px; font: inherit; cursor: pointer;
+}
+button.primary { background: var(--accent); border-color: var(--accent); font-weight: 600; }
+button:disabled { opacity: 0.45; cursor: default; }
+main { max-width: 1100px; margin: 0 auto; padding: 16px; display: grid; gap: 12px; }
+.row { display: flex; gap: 14px; padding: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+.row.picked { border-color: var(--accent); }
+.cover { flex: 0 0 240px; aspect-ratio: 16 / 9; border-radius: 8px; background: #000 center / cover no-repeat; cursor: zoom-in; }
+.cover.big { position: fixed; inset: 5vh 5vw; z-index: 5; flex: none; aspect-ratio: auto; background-size: contain; cursor: zoom-out; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.85); }
+.cands { flex: 1; display: flex; flex-wrap: wrap; gap: 10px; align-content: flex-start; }
+.cand { display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border: 1px solid var(--line); border-radius: 10px; cursor: pointer; user-select: none; min-width: 220px; }
+.cand:hover { background: rgba(255, 255, 255, 0.05); }
+.cand input { position: absolute; opacity: 0; pointer-events: none; }
+.box { flex: 0 0 22px; height: 22px; border-radius: 6px; border: 2px solid var(--muted); display: grid; place-items: center; }
+.cand:has(input:checked) { border-color: var(--accent); background: rgba(139, 92, 246, 0.14); }
+.cand:has(input:checked) .box { background: var(--accent); border-color: var(--accent); }
+.cand:has(input:checked) .box::after { content: '✓'; color: #fff; font-weight: 700; font-size: 14px; }
+.face { flex: 0 0 48px; height: 60px; border-radius: 6px; background: #222 center / cover no-repeat; }
+.face.none { display: grid; place-items: center; font-size: 10px; color: var(--muted); text-align: center; }
+.name { font-weight: 600; }
+.conf { font-size: 12px; font-variant-numeric: tabular-nums; }
+.c85 { color: var(--good); } .c80 { color: var(--mid); } .c70 { color: var(--low); }
+.empty { text-align: center; padding: 60px 16px; }
+@media (max-width: 640px) { .row { flex-direction: column; } .cover { flex-basis: auto; } .cand { min-width: 0; flex: 1 1 100%; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./">Loop</a>
+  <nav class="nav">
+    <a href="./" data-nav="browse">Browse</a>
+    <a href="./#/performers" data-nav="performers">Performers</a>
+    <a href="player.html">Heart-rate sessions</a>
+    <a href="./#/settings" data-nav="settings" class="on">Settings</a>
+  </nav>
+  <span class="grow"></span>
+  
+</header>
+<header class="review-head">
+  <h1>Performer check</h1>
+  <span id="count" class="muted"></span>
+  <span class="grow"></span>
+  <span id="msg" class="muted"></span>
+  <button id="apply" class="primary" disabled>Add checked</button>
+</header>
+<main id="list"><p class="muted empty">Loading…</p></main>
+<script type="module">
+const $ = (id) => document.getElementById(id);
+let items = [];
+let local = {};
+
+function confClass(c) { return c >= 85 ? 'c85' : c >= 80 ? 'c80' : 'c70'; }
+
+function render() {
+  const list = $('list');
+  if (!items.length) { list.innerHTML = '<p class="muted empty">Nothing left to check.</p>'; $('count').textContent = ''; $('apply').disabled = true; return; }
+  $('count').textContent = `${items.length} scenes · tick the ones you know are right`;
+  list.replaceChildren(...items.map(it => {
+    const row = document.createElement('section');
+    row.className = 'row';
+    const cover = document.createElement('div');
+    cover.className = 'cover';
+    cover.style.backgroundImage = `url("stash/scene/${it.sceneId}/screenshot")`;
+    cover.title = 'Click to enlarge';
+    cover.addEventListener('click', () => cover.classList.toggle('big'));
+    const cands = document.createElement('div');
+    cands.className = 'cands';
+    for (const c of it.candidates) {
+      const label = document.createElement('label');
+      label.className = 'cand';
+      const input = document.createElement('input');
+      input.type = 'checkbox';
+      input.dataset.scene = it.sceneId;
+      input.dataset.stash = c.id;
+      input.dataset.name = c.name;
+      input.addEventListener('change', update);
+      const box = document.createElement('span');
+      box.className = 'box';
+      const face = document.createElement('span');
+      const lid = local[c.id];
+      face.className = 'face' + (lid ? '' : ' none');
+      if (lid) face.style.backgroundImage = `url("stash/performer/${lid}/image")`;
+      else face.textContent = 'not in Stash';
+      const text = document.createElement('span');
+      text.innerHTML = '<div class="name"></div><div class="conf"></div>';
+      text.querySelector('.name').textContent = c.name;
+      const conf = text.querySelector('.conf');
+      conf.textContent = `${c.confidence}% match`;
+      conf.classList.add(confClass(c.confidence));
+      label.append(input, box, face, text);
+      cands.append(label);
+    }
+    row.append(cover, cands);
+    return row;
+  }));
+  update();
+}
+
+function update() {
+  const checked = [...document.querySelectorAll('.cand input:checked')];
+  document.querySelectorAll('.row').forEach(r => r.classList.toggle('picked', Boolean(r.querySelector('input:checked'))));
+  $('apply').disabled = !checked.length;
+  $('apply').textContent = checked.length ? `Add checked (${checked.length})` : 'Add checked';
+}
+
+async function load() {
+  const r = await (await fetch('api/visage-review')).json();
+  // Most likely right first.
+  items = (r.items || []).sort((x, y) => (y.candidates[0]?.confidence || 0) - (x.candidates[0]?.confidence || 0));
+  local = r.local || {};
+  render();
+}
+
+$('apply').addEventListener('click', async () => {
+  const checked = [...document.querySelectorAll('.cand input:checked')];
+  const picks = checked.map(i => ({ sceneId: i.dataset.scene, stashId: i.dataset.stash, name: i.dataset.name }));
+  // Only scenes with a tick are cleared; unticked ones stay for later.
+  const scenes = [...new Set(picks.map(p => p.sceneId))];
+  $('apply').disabled = true;
+  // Sent a few scenes at a time so the count moves: a performer new to Stash
+  // is created from StashDB first, which takes a moment each.
+  let added = 0, failed = 0, left = 0, sent = 0;
+  try {
+    for (let i = 0; i < scenes.length; i += 5) {
+      const chunk = scenes.slice(i, i + 5);
+      const chunkPicks = picks.filter(p => chunk.includes(p.sceneId));
+      $('msg').textContent = `Adding ${sent + 1}-${Math.min(sent + chunkPicks.length, picks.length)} of ${picks.length}…`;
+      const r = await (await fetch('api/visage-review/apply', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ picks: chunkPicks, scenes: chunk }) })).json();
+      added += r.added; failed += r.failed?.length || 0; left = r.left; sent += chunkPicks.length;
+    }
+    $('msg').textContent = `Done: added ${added}${failed ? `, ${failed} failed` : ''}. ${left} left.`;
+  } catch (e) {
+    $('msg').textContent = `Stopped after ${sent} (could not reach the player server).`;
+  }
+  await load();
+});
+
+load();
+</script>
+</body>
+</html>

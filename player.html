@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EdgeLoop Player</title>
+<link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="src/css/topbar.css">
+<link rel="stylesheet" href="src/css/player.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./">Loop</a>
+  <nav class="nav">
+    <a href="./" data-nav="browse">Browse</a>
+    <a href="./#/performers" data-nav="performers">Performers</a>
+    <a href="player.html" class="on">Heart-rate sessions</a>
+    <a href="./#/settings" data-nav="settings">Settings</a>
+  </nav>
+  <span class="grow"></span>
+  <span id="handyState" class="pill" title="The Handy"></span>
+</header>
+<video id="video" playsinline preload="auto"></video>
+
+<div id="start" class="panel">
+  <h1>EdgeLoop Player</h1>
+  <p id="startStatus" class="muted">Checking library…</p>
+
+  <div class="hr-setup">
+    <div class="hr-big"><span id="startHr">--</span> <small id="startUnit">BPM</small></div>
+    <p id="limits" class="muted small"></p>
+    <div class="hr-buttons">
+      <button id="bleBtn" title="Shift+click to pick a different monitor">Connect heart rate</button>
+      <button id="manualBtn" title="No monitor: number pad 1-9 sets arousal, 0 = edge, . = panic">Manual arousal</button>
+    </div>
+  </div>
+
+  <div id="learnAsk" class="learn-ask hidden">
+    <p id="learnText"></p>
+    <div class="hr-buttons">
+      <button id="learnYes">Yes</button>
+      <button id="learnNo">No</button>
+    </div>
+  </div>
+
+  <div class="goals">
+    <label>Length
+      <span class="goal-pair">
+        <input id="goalMin" type="number" min="1" max="600" placeholder="min" inputmode="numeric">
+        <span class="muted">to</span>
+        <input id="goalMax" type="number" min="1" max="600" placeholder="max" inputmode="numeric">
+        <span class="muted">min</span>
+      </span>
+    </label>
+    <label>Edges
+      <input id="goalEdges" type="number" min="1" max="50" placeholder="any" inputmode="numeric">
+    </label>
+  </div>
+
+  <div class="toggles">
+    <label class="toggle"><input type="checkbox" id="warmupToggle"><span class="switch"></span>Warm up</label>
+    <label class="toggle" title="A fast-climbing pulse counts as a few BPM higher, so edges are caught sooner"><input type="checkbox" id="lookaheadToggle"><span class="switch"></span>Lookahead</label>
+    <label class="toggle" title="Loud breathing or voice counts as extra BPM"><input type="checkbox" id="micToggle"><span class="switch"></span>Mic</label>
+    <label class="toggle" title="Play any mode with the Handy away: everything runs, nothing moves"><input type="checkbox" id="noHandyToggle"><span class="switch"></span>No Handy</label>
+    <label class="toggle" title="A run with no pullbacks, to find your real Climax HR: press Finished (X) when you finish"><input type="checkbox" id="calibToggle"><span class="switch"></span>Calibrate</label>
+  </div>
+
+  <div id="micSetup" class="mic-setup hidden">
+    <div class="mic-meter"><div id="micLevel" class="mic-level"></div><div id="micGateMark" class="mic-gate"></div></div>
+    <label class="mic-row">Gate <input id="micGate" type="range" min="8" max="90" step="1"> <span id="micGateVal"></span></label>
+    <label class="mic-row">Strength <input id="micBoost" type="range" min="0" max="20" step="1"> <span id="micBoostVal"></span></label>
+    <p id="micNote" class="muted small"></p>
+  </div>
+
+  <div class="modes">
+    <button class="mode" data-mode="dynamic" disabled>Dynamic<span id="countDynamic"></span></button>
+    <button class="mode" data-mode="full" disabled>Regular<span id="countRegular"></span></button>
+    <button class="mode" data-mode="pmv" disabled>PMV<span id="countPmv"></span></button>
+    <button class="mode" data-mode="script" disabled title="Scripts only, no video: watch your own content">Script only<span id="countScript"></span></button>
+    <button class="mode wide" data-mode="adventure" disabled title="Pick what comes next from cards after each chapter">Adventure<span id="countAdventure"></span></button>
+  </div>
+  <button id="refreshBtn" class="link" title="Check Stash for changes. Shift+click rebuilds everything.">Refresh library</button>
+  <button id="settingsBtn" class="link" title="Settings (S)">Settings</button>
+</div>
+
+<div id="settings" class="settings hidden" role="dialog" aria-label="Settings">
+  <div class="settings-card">
+    <div class="settings-head"><h2>Settings</h2><button id="settingsClose" title="Close (Esc)">Close</button></div>
+    <nav id="settingsTabs" class="settings-tabs"></nav>
+    <div id="settingsBody" class="settings-body"></div>
+    <p id="settingsMsg" class="settings-msg muted small"></p>
+  </div>
+</div>
+
+<div id="alert" class="alert hidden"></div>
+
+<div id="cards" class="cards hidden">
+  <div class="cards-head"><span id="cardsStage"></span><span id="cardsTimer" class="muted"></span></div>
+  <div id="cardsRow" class="cards-row"></div>
+</div>
+
+<div id="panicBox" class="panic-box hidden">
+  <p id="panicText"></p>
+  <p id="panicAsk" class="hidden">Lower your Climax HR to <b id="panicSuggest"></b> BPM? <span class="muted small">(now <span id="panicNow"></span>)</span></p>
+  <div id="panicButtons" class="hr-buttons hidden">
+    <button id="panicYes">Yes</button>
+    <button id="panicNo">No</button>
+  </div>
+  <p class="muted small">Press Right Alt to resume now.</p>
+</div>
+
+<div id="calibBox" class="panic-box calib-box hidden">
+  <p id="calibText"></p>
+  <div class="hr-buttons">
+    <button id="calibYes">Use it</button>
+    <button id="calibNo">Not now</button>
+  </div>
+</div>
+
+
+<div id="bar" class="bar hidden">
+  <div id="hud" class="hud hidden">
+  <span id="tier" class="tier"></span>
+  <span id="halfBadge" class="badge hidden">HALF</span>
+  <span id="edgeBadge" class="badge edge hidden">EDGE</span>
+  <span id="risingBadge" class="badge early hidden"></span>
+  <span id="micBadge" class="badge early hidden"></span>
+  <span id="hrvBadge" class="badge early hidden" title="Beat-to-beat variability has collapsed: usually close"></span>
+  <span id="hrWrap" class="hr"><b id="hr">--</b> / <span id="trigger">--</span></span>
+  <span id="arousalWrap" class="hr hidden">arousal <b id="arousal">3</b></span>
+  <span id="feelWrap" class="hr hidden" title="Your last number-pad rating; it fades after a minute">feel <b id="feel"></b></span>
+  <span id="feelBadge" class="badge early hidden"></span>
+  <span id="goal" class="goal"></span>
+  <span id="doing" class="doing"></span>
+  </div>
+  <div id="preview" class="preview hidden">
+    <div id="previewImg" class="preview-img"></div>
+    <span id="previewTime" class="preview-time"></span>
+  </div>
+  <div id="seek" class="seek">
+    <img id="heatmap" alt="">
+    <div id="played" class="played"></div>
+  </div>
+  <div class="row">
+    <button id="playBtn" title="Play / pause">Pause</button>
+    <button id="nextBtn" title="Next video, similar intensity (N)">Next</button>
+    <button id="ffBtn" title="Later in this video, different feel (Right arrow)">FF</button>
+    <button id="halfBtn" title="Half speed on / off (H)">Half</button>
+    <button id="slowerBtn" class="script-ctrl" title="Slower pace (Down arrow or number pad -)">Slower</button>
+    <button id="fasterBtn" class="script-ctrl" title="Faster pace (Up arrow or number pad +)">Faster</button>
+    <button id="reconnectBtn" class="hidden" title="Link the heart-rate strap again">Reconnect monitor</button>
+    <button id="panicBtn" class="panic" title="Stop the script now, keep the video (Right Alt or P; number pad . in manual mode)">PANIC</button>
+    <button id="finishBtn" class="finish" disabled title="Unlocks when the session goals are met">Finish</button>
+    <button id="finishedBtn" title="I just finished: record my peak heart rate (X)">Finished</button>
+    <button id="stopBtn" title="Stop everything and go back to the start screen (Esc)">Exit</button>
+    <span id="time" class="muted">0:00 / 0:00</span>
+    <button id="infoBtn" title="Show / hide the status line (I)">Info</button>
+    <button id="fullBtn" title="Fullscreen (F)">Fullscreen</button>
+    <button id="normBtn" title="Even out the volume (V)">Normalize</button>
+    <button id="barSettingsBtn" title="Settings (S)">Settings</button>
+    <span id="sceneTitle" class="scene-title"></span>
+    <span class="grow"></span>
+    <span id="status" class="muted"></span>
+    <span id="offset" class="muted" title="Script offset ([ and ] to adjust)"></span>
+  </div>
+</div>
+
+<script type="module" src="src/js/player/player.js"></script>
+</body>
+</html>

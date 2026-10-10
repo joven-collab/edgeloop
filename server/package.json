@@ -1,0 +1,9 @@
+{
+  "name": "loop-server",
+  "private": true,
+  "type": "module",
+  "description": "Local Loop hub server (thumbnails need sharp).",
+  "dependencies": {
+    "sharp": "^0.35.5"
+  }
+}

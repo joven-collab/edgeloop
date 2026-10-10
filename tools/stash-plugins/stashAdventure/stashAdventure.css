@@ -1,0 +1,118 @@
+.adv-controls { display: inline-flex; gap: 6px; margin-right: 6px; }
+.adv-controls .btn.on { background: #8b5cf6 !important; border-color: #8b5cf6 !important; color: #fff !important; }
+.adv-hidden { display: none !important; }
+
+.adv-overlay {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1060;
+  width: min(920px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto;
+  padding: 16px; border-radius: 14px; background: rgba(12, 12, 16, 0.86); border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(6px); color: #e8e8ec;
+}
+.adv-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.adv-head b { flex: 1; }
+.adv-timer { font-size: 13px; opacity: 0.7; }
+.adv-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.adv-card {
+  display: flex; flex-direction: column; padding: 0; overflow: hidden; text-align: left; color: inherit;
+  border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05); cursor: pointer;
+}
+.adv-card:hover { border-color: #8b5cf6; background: rgba(139, 92, 246, 0.14); }
+.adv-card.adv-suggested { border-color: rgba(139, 92, 246, 0.7); }
+.adv-img { aspect-ratio: 3 / 4; max-height: 280px; background: #111 center / cover no-repeat; }
+.adv-mystery .adv-img { filter: blur(18px) brightness(0.6); }
+.adv-body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; }
+.adv-title { font-size: 16px; font-weight: 700; }
+.adv-hint { font-size: 13px; opacity: 0.7; }
+.adv-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.adv-tags span { font-size: 11px; padding: 1px 7px; border-radius: 999px; background: rgba(255, 255, 255, 0.1); }
+
+/* Mode menu */
+.adv-anchor { position: relative; display: inline-flex; }
+.adv-menu { position: absolute; top: calc(100% + 4px); left: 0; z-index: 1070; min-width: 150px; padding: 4px; border-radius: 8px; background: #1c1c22; border: 1px solid rgba(255, 255, 255, 0.15); display: flex; flex-direction: column; }
+.adv-menu-item { text-align: left; padding: 6px 10px; border: 0; border-radius: 6px; background: transparent; color: #e8e8ec; cursor: pointer; }
+.adv-menu-item:hover { background: rgba(255, 255, 255, 0.08); }
+.adv-menu-item.on { color: #c4b5fd; font-weight: 700; }
+
+/* Full videos: the adventure list replaces Scene Up Next's list. */
+body.adv-full .scene-tabs > .upnext:not(.adv-side) { display: none !important; }
+body:not(.adv-full) .scene-tabs > .adv-side { display: none !important; }
+.adv-side .adv-kind { font-size: 12px; font-weight: 700; color: #c4b5fd; margin-bottom: 3px; }
+.adv-side .adv-mystery .upnext-thumb { filter: blur(10px) brightness(0.6); }
+.adv-side .adv-section { font-size: 12px; font-weight: 700; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; }
+.adv-opts { display: flex; gap: 12px; padding: 0 0 8px; font-size: 13px; }
+.adv-opt { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; margin: 0; }
+.adv-opt input { accent-color: #8b5cf6; }
+.adv-side.adv-ready .adv-side-title::after { content: ' · video over, pick one'; color: #c4b5fd; font-weight: 400; }
+
+/* ---- Full videos: compact sidebar, no scrolling ---- */
+@media (min-width: 1200px) {
+  body.adv-full .scene-tabs { flex: 0 0 280px !important; max-width: 280px !important; padding-left: 10px !important; }
+  body.adv-full .scene-divider { flex: 0 0 8px !important; max-width: 8px !important; }
+}
+body.adv-full .scene-tabs { overflow: hidden !important; }
+.adv-side { --row: clamp(48px, calc((100vh - 190px) / 8), 72px); }
+.adv-side .upnext-head { padding: 4px 0; gap: 6px; }
+.adv-side .upnext-head b { font-size: 14px; }
+.adv-side .upnext-head .btn { padding: 1px 8px; font-size: 12px; }
+.adv-side .adv-opts { padding: 0 0 4px; gap: 10px; font-size: 12px; }
+.adv-side .upnext-list { overflow: hidden !important; gap: 4px; padding-right: 0; }
+.adv-side .adv-item { display: grid; grid-template-columns: calc(var(--row) * 16 / 9) 1fr; gap: 8px; align-items: center; padding: 3px; border-radius: 6px; }
+.adv-side .adv-pic { display: flex; flex-direction: column; gap: 2px; }
+.adv-side .adv-thumb { position: relative; height: calc(var(--row) - 6px); border-radius: 4px; background: #000 center / cover no-repeat; }
+.adv-side .adv-mystery .adv-thumb { filter: blur(8px) brightness(0.6); }
+.adv-side .adv-dur { position: absolute; right: 2px; bottom: 2px; padding: 0 3px; border-radius: 3px; font-size: 10px; line-height: 14px; background: rgba(0, 0, 0, 0.75); }
+.adv-side .adv-heat { display: block; width: 100%; height: 4px; object-fit: fill; }
+.adv-side .adv-text { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.adv-side .adv-kind { font-size: 11px; font-weight: 700; color: #c4b5fd; margin: 0; }
+.adv-side .adv-line { font-size: 12px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.adv-side .adv-name { font-weight: 600; }
+.adv-side .adv-who { font-size: 11px; opacity: 0.65; }
+.adv-side .adv-section { margin-top: 2px; font-size: 10px; }
+
+/* Stash sizes the player as "100% minus its 450px sidebar"; with a slimmer
+   sidebar the player takes all the remaining width, so the video is not
+   pushed off-centre by an empty strip on the right. */
+@media (min-width: 1200px) {
+  .scene-tabs:not(.collapsed) ~ .scene-player-container { flex: 1 1 0 !important; max-width: none !important; min-width: 0; }
+}
+
+/* ---- Full videos: rows fill the sidebar's height (sized by fitSidebar) ---- */
+.adv-side { --row: 72px; }
+.adv-side .upnext-list { gap: 6px; }
+.adv-side .adv-item { height: var(--row); grid-template-columns: min(calc((var(--row) - 12px) * 16 / 9), 60%) 1fr; overflow: hidden; }
+.adv-side .adv-pic { height: 100%; min-height: 0; }
+.adv-side .adv-thumb { height: auto; flex: 1 1 auto; min-height: 0; }
+.adv-side .adv-name { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+/* Tall rows: picture on top, text underneath. */
+.adv-side.adv-stacked .adv-item { grid-template-columns: 1fr; grid-template-rows: 1fr auto; gap: 4px; align-items: stretch; }
+.adv-side.adv-stacked .adv-kind { font-size: 12px; }
+.adv-side.adv-stacked .adv-line { font-size: 13px; }
+.adv-side.adv-stacked .adv-name { -webkit-line-clamp: 1; }
+.adv-side.adv-stacked .adv-dur { font-size: 11px; line-height: 16px; padding: 0 4px; }
+
+/* ---- Full videos on a 16:9 screen: width follows the row height ---- */
+@media (min-width: 1200px) {
+  body.adv-full .scene-tabs { flex: 0 0 var(--adv-side, 280px) !important; max-width: var(--adv-side, 280px) !important; }
+}
+.adv-side .adv-item { grid-template-columns: var(--thumb, 120px) 1fr; gap: 10px; }
+.adv-side .adv-kind { font-size: calc(var(--text, 12px) - 1px); }
+.adv-side .adv-line { font-size: var(--text, 12px); }
+.adv-side .adv-who { font-size: calc(var(--text, 12px) - 1px); }
+.adv-side .adv-dur { font-size: calc(var(--text, 12px) - 2px); line-height: 1.4; padding: 0 4px; }
+.adv-side .adv-heat { height: 5px; }
+
+/* ---- Full videos: picture tiles in a slim column (text over the picture) ---- */
+.adv-side.adv-tiles .adv-item { display: block; position: relative; height: var(--row); padding: 0; border-radius: 6px; overflow: hidden; }
+.adv-side.adv-tiles .adv-pic { position: absolute; inset: 0; display: block; height: auto; }
+.adv-side.adv-tiles .adv-thumb { position: absolute; inset: 0 0 5px 0; height: auto; border-radius: 0; }
+.adv-side.adv-tiles .adv-heat { position: absolute; left: 0; right: 0; bottom: 0; height: 5px; }
+.adv-side.adv-tiles .adv-dur { top: 4px; bottom: auto; right: 4px; }
+.adv-side.adv-tiles .adv-text {
+  position: absolute; left: 0; right: 0; bottom: 5px; padding: 18px 8px 5px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.85) 45%);
+}
+.adv-side.adv-tiles .adv-name { -webkit-line-clamp: 1; text-shadow: 0 1px 2px #000; }
+.adv-side.adv-tiles .adv-kind { color: #d8ccff; text-shadow: 0 1px 2px #000; }
+.adv-side.adv-tiles .adv-who { opacity: 0.8; }
+.adv-side.adv-tiles .adv-item:hover { outline: 2px solid #8b5cf6; outline-offset: -2px; background: none; }

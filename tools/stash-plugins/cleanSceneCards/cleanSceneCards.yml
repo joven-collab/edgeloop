@@ -1,0 +1,6 @@
+name: Clean Scene Cards
+description: Scene cards show only the thumbnail, the funscript heatmap and the title. Date, description, file path and the tag / performer / marker counts are hidden.
+version: 1.0
+ui:
+  css:
+    - cleanSceneCards.css

@@ -1,0 +1,9 @@
+/* Scene cards: thumbnail, heatmap, title. Everything else is hidden. */
+.scene-card .scene-card__details,
+.scene-card .scene-card__description,
+.scene-card > hr,
+.scene-card .card-popovers { display: none !important; }
+
+.scene-card.grid-card { height: auto !important; }
+.scene-card .card-section { padding: 0.35rem 0.6rem 0.5rem !important; }
+.scene-card .card-section-title { margin: 0 !important; font-size: 0.95rem; line-height: 1.25; }

@@ -1,0 +1,8 @@
+name: EdgeLoop Link
+description: Adds an EdgeLoop button to the Stash top bar that opens the Loop hub (http://localhost:8420/).
+version: 1.0
+ui:
+  javascript:
+    - edgeloopLink.js
+  css:
+    - edgeloopLink.css

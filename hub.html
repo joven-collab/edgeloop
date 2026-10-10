@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loop Hub</title>
+<link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="src/css/topbar.css">
+<link rel="stylesheet" href="src/css/hub.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./">Loop</a>
+  <nav class="nav">
+    <a href="./" class="on" data-nav="browse">Browse</a>
+    <a href="./#/performers" data-nav="performers">Performers</a>
+    <a href="player.html">Heart-rate sessions</a>
+    <a href="./#/settings" data-nav="settings">Settings</a>
+  </nav>
+  <span class="grow"></span>
+  <span id="handyState" class="pill" title="The Handy"></span>
+</header>
+
+<!-- Browse -->
+<main id="browse" class="view">
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Search titles, performers, tags…" autocomplete="off">
+    <div id="folders" class="chips"></div>
+    <select id="sort" title="Sort">
+      <option value="added">Newest added</option>
+      <option value="random">Random</option>
+      <option value="plays">Most played</option>
+      <option value="unplayed">Not played yet</option>
+      <option value="long">Longest</option>
+      <option value="short">Shortest</option>
+      <option value="fast">Fastest script</option>
+      <option value="slow">Slowest script</option>
+    </select>
+    <button id="dirBtn" type="button" class="btn dir" title="Reverse the order">↓</button>
+    <span id="only4k" class="chip" role="button" aria-pressed="false" title="Show only 4K videos">4K only</span>
+    <span class="dur" title="Length">
+      <span class="muted">Length</span>
+      <span id="durDual" class="dual"><input id="durMin" type="range" min="0" max="10" step="1" value="0"><input id="durMax" type="range" min="0" max="10" step="1" value="10"></span>
+      <span id="durVal" class="stroke-val">any</span>
+    </span>
+  </div>
+  <div id="filters" class="chips active-filters"></div>
+  <p id="count" class="muted small"></p>
+  <div id="grid" class="grid"></div>
+  <div id="more" class="more"></div>
+</main>
+
+<!-- Performers -->
+<main id="performers" class="view hidden">
+  <div class="toolbar">
+    <input id="pSearch" type="search" placeholder="Search performers…" autocomplete="off">
+    <select id="pSort" title="Sort">
+      <option value="scenes">Most scenes</option>
+      <option value="name">Name</option>
+      <option value="recent">Recently added</option>
+    </select>
+  </div>
+  <p id="pCount" class="muted small"></p>
+  <div id="pGrid" class="pgrid"></div>
+</main>
+
+<!-- Calibrate: the sync test -->
+<main id="calibrate" class="view hidden">
+  <section class="cal">
+    <div class="cal-video"><video id="calVideo" playsinline preload="auto"></video></div>
+    <div class="cal-side">
+      <a class="muted small" href="./#/settings">← Settings</a>
+      <h2>Sync calibration</h2>
+      <p class="muted">Play the test clip with the Handy on. Watch where the clip shows a stroke landing and feel where the Handy lands. If the Handy is late, move the offset up; if it is early, move it down. The offset is saved as you go and used everywhere (the hub and the heart-rate sessions).</p>
+      <div class="cal-row"><button id="calPlay" type="button" class="btn">Play</button><button id="calRestart" type="button" class="btn">Restart</button><span id="calState" class="pill"></span></div>
+      <div class="cal-offset"><b id="calOffset">0</b> ms</div>
+      <input id="calSlider" type="range" min="-500" max="500" step="10" value="0">
+      <div class="cal-row"><button class="btn" data-d="-50">−50</button><button class="btn" data-d="-10">−10</button><button class="btn" data-d="10">+10</button><button class="btn" data-d="50">+50</button><button class="btn" data-d="reset">Reset</button></div>
+      <p id="calNote" class="muted small"></p>
+    </div>
+  </section>
+</main>
+
+<!-- Settings -->
+<main id="settings" class="view hidden">
+  <div class="settings">
+    <h2>Settings</h2>
+    <section class="set-card">
+      <h3>Tools</h3>
+      <div class="set-tools">
+        <a class="set-tool" href="./#/calibrate"><b>Calibrate</b><span class="muted">Line up the Handy with the video using the sync test clip.</span></a>
+        <a class="set-tool" href="review.html"><b>Performer check</b><span class="muted">Review the face matches Visage was unsure about.</span></a>
+        <a class="set-tool" href="setup.html"><b>Run setup again</b><span class="muted">Check Stash, the Handy, newer mode, your heart-rate strap and the sync test.</span></a>
+        <a id="openStash" class="set-tool" href="http://localhost:9999/" target="_blank" rel="noopener"><b>Open Stash ↗</b><span class="muted">Your Stash library, in a new tab.</span></a>
+      </div>
+    </section>
+    <section class="set-card">
+      <h3>Pictures</h3>
+      <p class="muted">The hub keeps small copies of every cover and performer photo so the grids load fast. If a cover changed in Stash and the hub still shows the old one, rebuild them. The hub keeps working while it rebuilds; pictures not made yet are made as you scroll to them.</p>
+      <div class="set-row"><span id="thumbInfo" class="muted">…</span><span class="grow"></span><button id="thumbRebuild" type="button" class="btn">Rebuild pictures</button></div>
+      <div class="set-bar"><i id="thumbBar"></i></div>
+    </section>
+    <section class="set-card">
+      <h3>Library</h3>
+      <p class="muted">The hub reads your library from Stash and re-reads it every minute. Re-read it now after tagging or adding scenes in Stash.</p>
+      <div class="set-row"><span id="libInfo" class="muted"></span><span class="grow"></span><button id="libRefresh" type="button" class="btn">Re-read from Stash</button></div>
+    </section>
+  </div>
+</main>
+
+<!-- Watch -->
+<main id="watch" class="view hidden">
+  <aside id="side" class="side">
+    <div class="side-head"><b>Up next</b><button id="shuffleBtn" type="button" class="btn small">Shuffle</button></div>
+    <div id="sideList" class="side-list"></div>
+  </aside>
+  <section id="stage" class="stage">
+    <div class="video-wrap">
+      <video id="video" playsinline preload="metadata"></video>
+    </div>
+    <div id="controls" class="controls">
+      <div id="preview" class="preview hidden"><div id="previewImg" class="preview-img"></div><span id="previewTime" class="preview-time"></span></div>
+      <div id="seek" class="seek" title="Click to jump"><img id="heatImg" alt=""><div id="played" class="played"></div></div>
+      <div class="crow">
+        <button id="playBtn" type="button" class="cbtn" title="Play / pause (Space)">▶</button>
+        <span id="time" class="time">0:00 / 0:00</span>
+        <span class="ctitle"><b id="title"></b><span id="who" class="who"></span></span>
+        <div id="markers" class="chips markers"></div>
+        <span class="grow"></span>
+        <button id="halfBtn" type="button" class="cbtn wide" title="Half speed: every other stroke, still in sync with the video (H)">½ speed</button>
+        <span class="stroke" title="Stroke range: the bottom and top of the Handy's travel">
+          <span class="muted">Stroke</span>
+          <span id="dual" class="dual"><input id="strokeMin" type="range" min="0" max="100" step="1" value="0"><input id="strokeMax" type="range" min="0" max="100" step="1" value="100"></span>
+          <span id="strokeVal" class="stroke-val">0–100%</span>
+        </span>
+        <span id="syncState" class="pill"></span>
+        <span class="offset" title="Script offset ([ and ])"><button id="offMinus" type="button" class="btn small">−</button><b id="offset">0</b> ms<button id="offPlus" type="button" class="btn small">+</button></span>
+        <input id="vol" type="range" min="0" max="1" step="0.05" title="Volume">
+        <button id="fsBtn" type="button" class="cbtn" title="Fullscreen (F)">⛶</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script type="module" src="src/js/hub/hub.js"></script>
+</body>
+</html>

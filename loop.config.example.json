@@ -1,0 +1,12 @@
+{
+  "_readme": "Copy this file to loop.config.json and change what you need. Every field is optional; delete the ones you do not use. See Setting it up in FORK-CHANGES.md.",
+
+  "stashUrl": "http://localhost:9999",
+  "stashDir": "C:\\Path\\To\\Stash",
+
+  "libraryRoots": null,
+  "folders": { "pmv": "pmv" },
+  "otherFolders": "regular",
+  "pmvTags": ["PMV"],
+  "faceMatchSkipFolders": ["pmv", "compilations"]
+}

@@ -1,0 +1,6 @@
+name: Compact Scrubber
+description: Hides the thumbnail strip and arrow buttons under the Stash video player and keeps only the funscript heatmap bar.
+version: 1.0
+ui:
+  css:
+    - compactScrubber.css

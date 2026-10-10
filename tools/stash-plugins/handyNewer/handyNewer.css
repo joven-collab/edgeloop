@@ -1,0 +1,4 @@
+.handy-newer { display: inline-flex; align-items: center; gap: 6px; margin-right: 6px; }
+.handy-newer-btn.on { background: #8b5cf6 !important; border-color: #8b5cf6 !important; color: #fff !important; }
+.handy-newer-status { font-size: 12px; opacity: 0.75; white-space: nowrap; }
+.handy-newer-status.bad { color: #f87171; opacity: 1; }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loop Setup</title>
+<link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="src/css/topbar.css">
+<link rel="stylesheet" href="src/css/hub.css">
+<link rel="stylesheet" href="src/css/setup.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="./">Loop</a>
+  <span class="grow"></span>
+  <a id="skipAll" class="muted small" href="./">Skip setup</a>
+</header>
+
+<main class="setup">
+  <ol id="rail" class="rail"></ol>
+  <section id="step" class="step" aria-live="polite"></section>
+  <footer class="step-nav">
+    <button id="back" type="button" class="btn">Back</button>
+    <span class="grow"></span>
+    <button id="next" type="button" class="btn primary">Next</button>
+  </footer>
+</main>
+
+<script type="module" src="src/js/setup/setup.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+/* Keep the funscript heatmap; drop the thumbnail strip and its arrows. */
+.scrubber-wrapper .scrubber-button { display: none !important; }
+.scrubber-wrapper .scrubber-content { height: 20px !important; margin: 0 !important; }
+.scrubber-wrapper .scrubber-viewport { visibility: hidden !important; }
+.scrubber-wrapper .scrubber-heatmap { visibility: visible !important; top: 0; }

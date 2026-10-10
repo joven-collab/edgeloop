@@ -1,0 +1,8 @@
+name: Stash Adventure
+description: Choose-your-own-adventure viewing. After each chapter, three cards (stay with her, the next step, someone new, a mystery door) pick the next scene; Finish turns it toward how scenes end. Uses tags, performers and markers; skips PMV and CH.
+version: 1.0
+ui:
+  javascript:
+    - stashAdventure.js
+  css:
+    - stashAdventure.css

@@ -1,0 +1,8 @@
+name: Scene Up Next
+description: A slimmer scene sidebar that lists similar scripted scenes (same performers, studio, tags) to pick the next one without leaving the player. Stash's own tabs stay under the Details button.
+version: 1.0
+ui:
+  javascript:
+    - sceneUpNext.js
+  css:
+    - sceneUpNext.css
